@@ -1,7 +1,9 @@
-﻿using Carter;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Scalar.AspNetCore;
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
+using YourProjectName.WebApi.Commons;
 
 namespace YourProjectName.WebApi;
 
@@ -17,16 +19,29 @@ public static class DependencyInjection
         //Register Web API services here
         services.AddApplicationServices()
                 .AddInfrastructureServices(dbConnectionString)
-                .AddCarter()
+                .AddEndpoints(Assembly.GetExecutingAssembly())
                 .AddOpenApiServices();
 
         return services;
     }
 
+    // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     private static IServiceCollection AddOpenApiServices(this IServiceCollection services) 
     {
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         services.AddOpenApi();
+
+        return services;
+    }
+
+    //Discover all endpoints that implement the IEndpoints interface
+    private static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
+    {
+        ServiceDescriptor[] endpointServiceDescriptors = [.. assembly
+            .DefinedTypes
+            .Where(type => type is { IsAbstract: false, IsInterface: false } && type.IsAssignableTo(typeof(IEndpoints)))
+            .Select(type => ServiceDescriptor.Transient(typeof(IEndpoints), type))];
+
+        services.TryAddEnumerable(endpointServiceDescriptors);
 
         return services;
     }
@@ -34,12 +49,11 @@ public static class DependencyInjection
     #endregion
     #region services usage
 
+    // Configure the HTTP request pipeline.
     public static void UseAppServices(this WebApplication app) 
     {
-        // Configure the HTTP request pipeline.
-
-        //Discover and register all carter modules (endpoints)
-        app.MapCarter();
+        //Register all the endpoints that implement the IEndpoints interface
+        app.MapEndpoints();
 
         //Enable OpenApi documentation and UI
         app.UseOpenApi();
@@ -55,6 +69,16 @@ public static class DependencyInjection
             //Enables OpenApi UI using Scalar
             //Go to localhost:7232/scalar/v1 to access the UI
             app.MapScalarApiReference();
+        }
+    }
+
+    private static void MapEndpoints(this WebApplication app) 
+    {
+        var endpointGroups = app.Services.GetRequiredService<IEnumerable<IEndpoints>>();
+
+        foreach (var endpointGroup in endpointGroups)
+        {
+            endpointGroup.AddRoutes(app);
         }
     }
 
