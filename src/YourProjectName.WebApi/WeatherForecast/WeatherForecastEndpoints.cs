@@ -9,7 +9,11 @@ namespace YourProjectName.WebApi.WeatherForecast
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/weatherforecast", async (
+            var group = app.MapGroup("weatherforecast")
+                .WithTags(Tags.WeatherForecast)
+                .WithDescription("Weather forecast endpoints");
+
+            group.MapGet("/", async (
                 [AsParameters] GetWeatherForecastQuery query,
                 [FromServices] IGetWeatherForecastHandler handler) =>
                 {
@@ -17,8 +21,7 @@ namespace YourProjectName.WebApi.WeatherForecast
                     var response = await handler.GetWeatherForecast(query);
                     return TypedResults.Ok(response);
                 })
-                .WithName("GetWeatherForecast")
-                .WithTags(Tags.WeatherForecast);
+                .WithName("GetWeatherForecast");
         }
     }
 }
