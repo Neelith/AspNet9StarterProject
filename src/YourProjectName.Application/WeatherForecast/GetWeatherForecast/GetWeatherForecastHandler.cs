@@ -13,6 +13,7 @@ public sealed class GetWeatherForecastResponse() : DataResponse<IEnumerable<Weat
 
 public sealed class GetWeatherForecastHandler : IGetWeatherForecastHandler
 {
+    //validate the query using FluentValidation and manage automatic registration for handlers in the DI container
     public Task<GetWeatherForecastResponse> GetWeatherForecast(GetWeatherForecastQuery? query)
     {
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
