@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using YourProjectName.Application.WeatherForecast.GetWeatherForecast;
+using YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
 
 namespace YourProjectName.Application;
 

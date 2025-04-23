@@ -1,4 +1,4 @@
-﻿namespace YourProjectName.WebApi.Commons;
+﻿namespace YourProjectName.WebApi.Constants;
 
 public static class Tags
 {

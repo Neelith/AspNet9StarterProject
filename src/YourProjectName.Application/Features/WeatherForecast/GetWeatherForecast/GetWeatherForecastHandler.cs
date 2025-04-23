@@ -1,7 +1,9 @@
-﻿using YourProjectName.Application.Commons;
+﻿using FluentResults;
+using YourProjectName.Application.Commons;
+using YourProjectName.Domain.Commons;
 using YourProjectName.Domain.WeatherForecast;
 
-namespace YourProjectName.Application.WeatherForecast.GetWeatherForecast;
+namespace YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
 
 public sealed class GetWeatherForecastQuery() : IQuery 
 {
@@ -14,8 +16,14 @@ public sealed class GetWeatherForecastResponse() : DataResponse<IEnumerable<Weat
 public sealed class GetWeatherForecastHandler : IGetWeatherForecastHandler
 {
     //validate the query using FluentValidation and manage automatic registration for handlers in the DI container
-    public Task<GetWeatherForecastResponse> GetWeatherForecast(GetWeatherForecastQuery? query)
+    public Task<Result<GetWeatherForecastResponse>> GetWeatherForecast(GetWeatherForecastQuery? query)
     {
+        if (query is null)
+        {
+            var error = Errors.ValidationError("Query cannot be null");
+            return Task.FromResult(Result.Fail<GetWeatherForecastResponse>(error));
+        }
+
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
         var forecast = Enumerable.Range(1, 5).Select(index =>
@@ -37,6 +45,8 @@ public sealed class GetWeatherForecastHandler : IGetWeatherForecastHandler
             forecast = forecast.Where(x => x.TemperatureC <= query.TemperatureRangeMax.Value).ToArray();
         }
 
-        return Task.FromResult(new GetWeatherForecastResponse { Data = forecast });
+        var result = Result.Ok(new GetWeatherForecastResponse { Data = forecast });
+
+        return Task.FromResult(result);
     }
 }
