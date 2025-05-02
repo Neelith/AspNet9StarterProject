@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YourProjectName.Application.Infrastructure;
+namespace YourProjectName.Application.Infrastructure.Persistance;
 
 public interface IApplicationDbContext
 {

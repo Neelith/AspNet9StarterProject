@@ -5,8 +5,8 @@ using System.Reflection.Emit;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using YourProjectName.Application.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using YourProjectName.Application.Infrastructure.Persistance;
 
 namespace YourProjectName.Infrastructure.Persistance
 {

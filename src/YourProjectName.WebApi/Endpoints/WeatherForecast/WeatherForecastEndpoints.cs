@@ -17,8 +17,8 @@ public class WeatherForecastEndpoints : IEndpoints
             .WithTags(Tags.WeatherForecast)
             .WithDescription("Weather forecast endpoints");
 
-        group.MapGet("/", 
-            async Task<IResult> 
+        group.MapGet("/",
+            async Task<IResult>
             ([AsParameters] GetWeatherForecastQuery query,
             [FromServices] IGetWeatherForecastHandler handler,
             HttpContext context) =>
@@ -26,13 +26,13 @@ public class WeatherForecastEndpoints : IEndpoints
                 var result = await handler.GetWeatherForecast(query);
 
                 return result.Match(
-                    result => TypedResults.Ok(result.Value), 
+                    result => TypedResults.Ok(result.Value),
                     result => result.ToErrorResponse(context.Request.Path)
                 );
             })
             .WithName("GetWeatherForecast")
             .Produces<GetWeatherForecastResponse>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status500InternalServerError);
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 }

@@ -4,6 +4,7 @@ using Scalar.AspNetCore;
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
 using YourProjectName.WebApi.Commons;
+using YourProjectName.WebApi.Middlewares;
 
 namespace YourProjectName.WebApi;
 
@@ -20,7 +21,16 @@ public static class DependencyInjection
         services.AddApplicationServices()
                 .AddInfrastructureServices(dbConnectionString)
                 .AddEndpoints(Assembly.GetExecutingAssembly())
-                .AddOpenApiServices();
+                .AddOpenApiServices()
+                .AddMiddlewares();
+
+        return services;
+    }
+
+    // Add the custom middlewares to the pipeline
+    private static IServiceCollection AddMiddlewares(this IServiceCollection services)
+    {
+        services.AddTransient<ValidationMiddleware>();
 
         return services;
     }
@@ -59,6 +69,9 @@ public static class DependencyInjection
         app.UseOpenApi();
 
         app.UseHttpsRedirection();
+
+        //Enable validation middleware
+        app.UseMiddleware<ValidationMiddleware>();
     }
 
     private static void UseOpenApi(this WebApplication app) 

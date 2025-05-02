@@ -1,6 +1,6 @@
 ﻿namespace YourProjectName.Domain.WeatherForecast;
 
-public class WeatherForecastModel
+public class WeatherForecast
 {
     public DateOnly Date { get; set; }
     public int TemperatureC { get; set; }

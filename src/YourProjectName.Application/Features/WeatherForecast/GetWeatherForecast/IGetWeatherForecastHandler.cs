@@ -4,5 +4,5 @@ namespace YourProjectName.Application.Features.WeatherForecast.GetWeatherForecas
 
 public interface IGetWeatherForecastHandler
 {
-    Task<Result<GetWeatherForecastResponse>> GetWeatherForecast(GetWeatherForecastQuery? query);
+    Task<Result<GetWeatherForecastResponse>> GetWeatherForecast(GetWeatherForecastQuery query);
 }
