@@ -18,28 +18,21 @@ public class WeatherForecastEndpoints : IEndpoints
             .WithDescription("Weather forecast endpoints");
 
         group.MapGet("/", 
-            async Task<Results<
-                BadRequest<ProblemDetails>, InternalServerError<ProblemDetails>, 
-                Ok<GetWeatherForecastResponse>>> 
+            async Task<IResult> 
             ([AsParameters] GetWeatherForecastQuery query,
             [FromServices] IGetWeatherForecastHandler handler,
             HttpContext context) =>
             {
                 var result = await handler.GetWeatherForecast(query);
 
-                var instance = context.Request.Path;
-                var errorCode = result.Errors.GetResultErrorCode();
-                //TODO
-                errorCode switch
-                {
-                    Errors.ValidationErrorCode => result.ToBadRequest(instance),
-                    Errors.NotFoundErrorCode => result.ToNotFound(instance),
-                    Errors.InternalErrorCode => result.ToInternalServerError(instance),
-                    _ => throw new Exception("Unknown error")
-                };
-
-                return result.IsSuccess ? TypedResults.Ok(result.Value) : result.ToProblem();
+                return result.Match(
+                    result => TypedResults.Ok(result.Value), 
+                    result => result.ToErrorResponse(context.Request.Path)
+                );
             })
-            .WithName("GetWeatherForecast");
+            .WithName("GetWeatherForecast")
+            .Produces<GetWeatherForecastResponse>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
     }
 }

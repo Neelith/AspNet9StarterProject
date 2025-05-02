@@ -7,7 +7,39 @@ namespace YourProjectName.WebApi.Commons;
 
 public static class ResultExtensions
 {
-    //
+    public static IResult Match<T>(
+        this Result<T> result, 
+        Func<Result<T>, IResult> onSuccess,
+        Func<Result<T>, IResult> onFailure)
+        {
+            if (result.IsFailed)
+            {
+                return onFailure(result);
+            }
+            
+            return onSuccess(result);
+        }
+
+    public static IResult ToErrorResponse<T>(
+        this Result<T> result, 
+        string? instance = default)
+    {
+        if (result is null || result.IsSuccess)
+        {
+            throw new ArgumentException("Expected 'failed' result, but 'success' result was found instead");
+        }
+
+        var errorCode = result.Errors.GetResultErrorCode();
+
+        return errorCode switch
+        {
+            Errors.ValidationErrorCode => result.ToBadRequest(instance),
+            Errors.NotFoundErrorCode => result.ToNotFound(instance),
+            Errors.InternalErrorCode => result.ToInternalServerError(instance),
+            _ => throw new ArgumentException("Unhandled result error code"),
+        };
+    } 
+
     public static bool IsValidationErrorResult<T>(this Result<T> result) => result.IsErrorResultOfType(Errors.ValidationErrorCode);
     public static bool IsNotFoundErrorResult<T>(this Result<T> result) => result.IsErrorResultOfType(Errors.NotFoundErrorCode);
     public static bool IsInternalErrorResult<T>(this Result<T> result) => result.IsErrorResultOfType(Errors.InternalErrorCode);
