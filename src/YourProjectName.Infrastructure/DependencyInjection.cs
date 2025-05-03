@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using YourProjectName.Application.Infrastructure.Persistance;
-using Microsoft.EntityFrameworkCore;
 using YourProjectName.Infrastructure.Persistence;
 
 namespace YourProjectName.Infrastructure;

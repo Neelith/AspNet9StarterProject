@@ -26,10 +26,10 @@ public sealed class GetWeatherForecastQueryHandler(IValidator<GetWeatherForecast
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
         var forecasts = Enumerable.Range(1, 5)
-            .Select(index => 
+            .Select(index =>
             WeatherForecastAggregate.Create(
-                DateOnly.FromDateTime(DateTime.Now.AddDays(index)), 
-                Random.Shared.Next(-20, 55), 
+                DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                Random.Shared.Next(-20, 55),
                 summaries[Random.Shared.Next(summaries.Length)]))
             .ToArray();
 

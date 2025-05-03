@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using YourProjectName.Domain.WeatherForecast;
 
 namespace YourProjectName.Application.Infrastructure.Persistance;
