@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using YourProjectName.Application.Infrastructure.Persistance;
-using YourProjectName.Infrastructure.Persistance;
+using Microsoft.EntityFrameworkCore;
+using YourProjectName.Infrastructure.Persistence;
 
 namespace YourProjectName.Infrastructure;
 
@@ -9,9 +10,13 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string? dbConnectionString)
     {
         //Register infrastructure services here
-        var assembly = typeof(DependencyInjection).Assembly;
 
-        //services.AddDbContext(dbConnectionString);
+        if (!string.IsNullOrEmpty(dbConnectionString))
+        {
+            //log warning if the connection string is empty
+            services.AddDbContext(dbConnectionString);
+        }
+
 
         return services;
     }
@@ -23,11 +28,7 @@ public static class DependencyInjection
             throw new ArgumentNullException(nameof(connectionString));
         }
 
-        services.AddDbContext<ApplicationDbContext>((sp, options) =>
-        {
-            //Add your DB provider here
-            //options.UseSqlServer(sqlServerConnectionString);
-        });
+        services.AddDbContext<ApplicationDbContext>((options) => options.UseNpgsql(connectionString));
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
     }

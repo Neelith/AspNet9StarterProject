@@ -2,7 +2,6 @@
 using YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
 using YourProjectName.WebApi.Commons;
 using YourProjectName.WebApi.Constants;
-using IGetWeatherForecastHandler = YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast.IGetWeatherForecastHandler;
 
 namespace YourProjectName.WebApi.Endpoints.WeatherForecast;
 

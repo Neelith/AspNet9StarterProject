@@ -14,7 +14,7 @@ public static class DependencyInjection
     public static IServiceCollection AddWebApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         //Get the database connection string
-        string? dbConnectionString = configuration.GetConnectionString("TODO");
+        string? dbConnectionString = configuration.GetConnectionString("YourProjectNameDb");
 
         //Register Web API services here
         services.AddApplicationServices()

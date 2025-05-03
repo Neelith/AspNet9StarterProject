@@ -20,7 +20,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddHandlers(this IServiceCollection services)
     {
-        services.AddScoped<IGetWeatherForecastHandler, GetWeatherForecastHandler>();
+        services.AddScoped<IGetWeatherForecastHandler, GetWeatherForecastQueryHandler>();
 
         return services;
     }
