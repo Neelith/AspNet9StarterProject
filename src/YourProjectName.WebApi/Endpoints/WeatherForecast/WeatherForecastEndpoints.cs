@@ -1,8 +1,5 @@
-﻿using FluentResults;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
-using YourProjectName.Domain.Commons;
 using YourProjectName.WebApi.Commons;
 using YourProjectName.WebApi.Constants;
 using IGetWeatherForecastHandler = YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast.IGetWeatherForecastHandler;
@@ -23,14 +20,13 @@ public class WeatherForecastEndpoints : IEndpoints
             [FromServices] IGetWeatherForecastHandler handler,
             HttpContext context) =>
             {
-                var result = await handler.GetWeatherForecast(query);
+                var result = await handler.HandleAsync(query);
 
                 return result.Match(
                     result => TypedResults.Ok(result.Value),
                     result => result.ToErrorResponse(context.Request.Path)
                 );
             })
-            .WithName("GetWeatherForecast")
             .Produces<GetWeatherForecastResponse>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);

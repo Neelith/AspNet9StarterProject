@@ -6,7 +6,7 @@ namespace YourProjectName.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services) 
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         //Register application services here
         var assembly = typeof(DependencyInjection).Assembly;
@@ -18,7 +18,7 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddHandlers(this IServiceCollection services) 
+    private static IServiceCollection AddHandlers(this IServiceCollection services)
     {
         services.AddScoped<IGetWeatherForecastHandler, GetWeatherForecastHandler>();
 

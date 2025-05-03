@@ -4,7 +4,6 @@ using Scalar.AspNetCore;
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
 using YourProjectName.WebApi.Commons;
-using YourProjectName.WebApi.Middlewares;
 
 namespace YourProjectName.WebApi;
 
@@ -12,7 +11,7 @@ public static class DependencyInjection
 {
     #region services configuration
 
-    public static IServiceCollection AddWebApiServices(this IServiceCollection services, IConfiguration configuration) 
+    public static IServiceCollection AddWebApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         //Get the database connection string
         string? dbConnectionString = configuration.GetConnectionString("TODO");
@@ -21,22 +20,13 @@ public static class DependencyInjection
         services.AddApplicationServices()
                 .AddInfrastructureServices(dbConnectionString)
                 .AddEndpoints(Assembly.GetExecutingAssembly())
-                .AddOpenApiServices()
-                .AddMiddlewares();
-
-        return services;
-    }
-
-    // Add the custom middlewares to the pipeline
-    private static IServiceCollection AddMiddlewares(this IServiceCollection services)
-    {
-        services.AddTransient<ValidationMiddleware>();
+                .AddOpenApiServices();
 
         return services;
     }
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-    private static IServiceCollection AddOpenApiServices(this IServiceCollection services) 
+    private static IServiceCollection AddOpenApiServices(this IServiceCollection services)
     {
         services.AddOpenApi();
 
@@ -60,7 +50,7 @@ public static class DependencyInjection
     #region services usage
 
     // Configure the HTTP request pipeline.
-    public static void UseAppServices(this WebApplication app) 
+    public static void UseAppServices(this WebApplication app)
     {
         //Register all the endpoints that implement the IEndpoints interface
         app.MapEndpoints();
@@ -69,12 +59,9 @@ public static class DependencyInjection
         app.UseOpenApi();
 
         app.UseHttpsRedirection();
-
-        //Enable validation middleware
-        app.UseMiddleware<ValidationMiddleware>();
     }
 
-    private static void UseOpenApi(this WebApplication app) 
+    private static void UseOpenApi(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
@@ -85,7 +72,7 @@ public static class DependencyInjection
         }
     }
 
-    private static void MapEndpoints(this WebApplication app) 
+    private static void MapEndpoints(this WebApplication app)
     {
         var endpointGroups = app.Services.GetRequiredService<IEnumerable<IEndpoints>>();
 

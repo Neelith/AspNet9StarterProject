@@ -1,41 +1,17 @@
 ﻿using FluentResults;
 using FluentValidation;
-using YourProjectName.Application.Commons;
+using YourProjectName.Application.Commons.Handlers;
 using YourProjectName.Domain.Commons;
 
 namespace YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
 
-public sealed record GetWeatherForecastQuery(
-    int? TemperatureRangeMin, 
-    int? TemperatureRangeMax) 
-    : IQuery {}
-
-public sealed class GetWeatherForecastQueryValidator : AbstractValidator<GetWeatherForecastQuery>
-{
-    public GetWeatherForecastQueryValidator()
-    {
-        RuleFor(x => x.TemperatureRangeMin)
-            .GreaterThanOrEqualTo(-20)
-            .LessThanOrEqualTo(55)
-            .When(x => x.TemperatureRangeMin.HasValue);
-
-        RuleFor(x => x.TemperatureRangeMax)
-            .GreaterThanOrEqualTo(-20)
-            .LessThanOrEqualTo(55)
-            .When(x => x.TemperatureRangeMax.HasValue);
-    }
-}
-
-public sealed record GetWeatherForecastResponse() : DataResponse<GetWeatherForecastDataResponse>;
-
-public sealed record GetWeatherForecastDataResponse(IEnumerable<Domain.WeatherForecast.WeatherForecast> Forecasts);
+public interface IGetWeatherForecastHandler : IHandler<GetWeatherForecastQuery, Result<GetWeatherForecastResponse>> { }
 
 public sealed class GetWeatherForecastHandler(IValidator<GetWeatherForecastQuery> validator) : IGetWeatherForecastHandler
 {
-    //validate the query using FluentValidation and manage automatic registration for handlers in the DI container
-    public async Task<Result<GetWeatherForecastResponse>> GetWeatherForecast(GetWeatherForecastQuery query)
+    public async Task<Result<GetWeatherForecastResponse>> HandleAsync(GetWeatherForecastQuery request)
     {
-        var validationResult = await validator.ValidateAsync(query);
+        var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
         {
@@ -54,14 +30,14 @@ public sealed class GetWeatherForecastHandler(IValidator<GetWeatherForecastQuery
             })
             .ToArray();
 
-        if (query is not null && query.TemperatureRangeMin.HasValue)
+        if (request is not null && request.TemperatureRangeMin.HasValue)
         {
-            forecasts = forecasts.Where(x => x.TemperatureC >= query.TemperatureRangeMin.Value).ToArray();
+            forecasts = forecasts.Where(x => x.TemperatureC >= request.TemperatureRangeMin.Value).ToArray();
         }
 
-        if (query is not null && query.TemperatureRangeMax.HasValue)
+        if (request is not null && request.TemperatureRangeMax.HasValue)
         {
-            forecasts = forecasts.Where(x => x.TemperatureC <= query.TemperatureRangeMax.Value).ToArray();
+            forecasts = forecasts.Where(x => x.TemperatureC <= request.TemperatureRangeMax.Value).ToArray();
         }
 
         var response = new GetWeatherForecastResponse

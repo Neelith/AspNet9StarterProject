@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using YourProjectName.Application.Infrastructure.Persistance;
 using YourProjectName.Infrastructure.Persistance;
 
@@ -17,7 +16,7 @@ public static class DependencyInjection
         return services;
     }
 
-    private static void AddDbContext(this IServiceCollection services, string? connectionString) 
+    private static void AddDbContext(this IServiceCollection services, string? connectionString)
     {
         if (string.IsNullOrEmpty(connectionString))
         {

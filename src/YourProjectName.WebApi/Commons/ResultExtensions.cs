@@ -8,20 +8,20 @@ namespace YourProjectName.WebApi.Commons;
 public static class ResultExtensions
 {
     public static IResult Match<T>(
-        this Result<T> result, 
+        this Result<T> result,
         Func<Result<T>, IResult> onSuccess,
         Func<Result<T>, IResult> onFailure)
+    {
+        if (result.IsFailed)
         {
-            if (result.IsFailed)
-            {
-                return onFailure(result);
-            }
-            
-            return onSuccess(result);
+            return onFailure(result);
         }
 
+        return onSuccess(result);
+    }
+
     public static IResult ToErrorResponse<T>(
-        this Result<T> result, 
+        this Result<T> result,
         string? instance = default)
     {
         if (result is null || result.IsSuccess)
@@ -38,26 +38,6 @@ public static class ResultExtensions
             Errors.InternalErrorCode => result.ToInternalServerError(instance),
             _ => throw new ArgumentException("Unhandled result error code"),
         };
-    } 
-
-    public static bool IsValidationErrorResult<T>(this Result<T> result) => result.IsErrorResultOfType(Errors.ValidationErrorCode);
-    public static bool IsNotFoundErrorResult<T>(this Result<T> result) => result.IsErrorResultOfType(Errors.NotFoundErrorCode);
-    public static bool IsInternalErrorResult<T>(this Result<T> result) => result.IsErrorResultOfType(Errors.InternalErrorCode);
-    private static bool IsErrorResultOfType<T>(this Result<T> result, int errorCode) 
-    {
-        if (result is null || result.IsSuccess)
-        {
-            return false;
-        }
-
-        var code = result.Errors.GetResultErrorCode();
-
-        if (!code.HasValue)
-        {
-            return false;
-        }
-
-        return code == errorCode;
     }
 
     public static BadRequest<ProblemDetails> ToBadRequest<T>(this Result<T> result, string? instance)
@@ -66,7 +46,8 @@ public static class ResultExtensions
 
         string[] errors = result.Errors.GetArrayOfErrorMessages();
 
-        var problem = new ProblemDetails {
+        var problem = new ProblemDetails
+        {
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
             Title = "One or more validation errors found",
             Detail = errors is not null && errors.Length != 0 ? string.Join($"{Environment.NewLine}- ", errors) : null,
@@ -86,7 +67,7 @@ public static class ResultExtensions
         {
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.5",
             Title = "The resource was not found",
-            Detail = errors is not null && errors.Any() ? string.Join($"{Environment.NewLine}- ", errors) : null,
+            Detail = errors is not null && errors.Length != 0 ? string.Join($"{Environment.NewLine}- ", errors) : null,
             Instance = instance
         };
 
@@ -103,7 +84,7 @@ public static class ResultExtensions
         {
             Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1",
             Title = "Internal server error",
-            Detail = errors is not null && errors.Any() ? string.Join($"{Environment.NewLine}- ", errors) : null,
+            Detail = errors is not null && errors.Length != 0 ? string.Join($"{Environment.NewLine}- ", errors) : null,
             Instance = instance
         };
 
