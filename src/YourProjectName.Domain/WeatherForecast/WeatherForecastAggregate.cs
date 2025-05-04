@@ -1,8 +1,9 @@
-﻿namespace YourProjectName.Domain.WeatherForecast;
+﻿using YourProjectName.Domain.Commons;
 
-public class WeatherForecastAggregate
+namespace YourProjectName.Domain.WeatherForecast;
+
+public class WeatherForecastAggregate : Entity<int>, IAggregateRoot
 {
-    public int Id { get; set; }
     public DateOnly Date { get; private set; }
     public int TemperatureC { get; private set; }
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
