@@ -2,5 +2,13 @@
 
 public abstract record DataResponse<TData>() : IResponse where TData : notnull
 {
-    public required TData Data { get; init; }
+    public TData Data { get; init; }
+
+    public static TResponse Create<TResponse>(TData data) where TResponse : DataResponse<TData>, new()
+    {
+        return new TResponse
+        {
+            Data = data
+        };
+    }
 }

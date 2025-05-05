@@ -41,13 +41,9 @@ public sealed class GetWeatherForecastQueryHandler(
         }
 
         var forecasts = await query
-            .Select(x => WeatherForecastAggregate.Create(x.Date, x.TemperatureC, x.Summary))
             .ToListAsync();
 
-        var response = new GetWeatherForecastResponse
-        {
-            Data = new GetWeatherForecastDataResponse(forecasts)
-        };
+        var response = GetWeatherForecastResponse.Create(forecasts);
 
         return Result.Ok(response);
     }

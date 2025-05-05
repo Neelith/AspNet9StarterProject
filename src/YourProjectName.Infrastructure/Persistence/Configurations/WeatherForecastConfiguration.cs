@@ -13,6 +13,13 @@ namespace YourProjectName.Infrastructure.Persistence.Configurations
             builder.Property(c => c.Id)
                 .ValueGeneratedOnAdd()
                 .IsRequired();
+
+            builder.OwnsOne(c => c.Summary, (config) => 
+            {
+                config.Property(c => c.Value)
+                    .HasColumnName("Summary")
+                    .HasMaxLength(256);
+            });
         }
     }
 }
