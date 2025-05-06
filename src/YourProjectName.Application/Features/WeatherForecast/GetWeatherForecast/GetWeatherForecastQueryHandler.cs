@@ -12,7 +12,7 @@ public interface IGetWeatherForecastHandler : IHandler<GetWeatherForecastQuery, 
 
 public sealed class GetWeatherForecastQueryHandler(
     IValidator<GetWeatherForecastQuery> validator, 
-    IApplicationDbContext dbContext) 
+    IWeatherForecastRepository weatherForecastRepository) 
     : IGetWeatherForecastHandler
 {
     public async Task<Result<GetWeatherForecastResponse>> HandleAsync(GetWeatherForecastQuery request)
@@ -28,20 +28,8 @@ public sealed class GetWeatherForecastQueryHandler(
 
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
-        var query = dbContext.Forecasts.AsNoTracking();
-
-        if (request is not null && request.TemperatureRangeMin.HasValue)
-        {
-            query = query.Where(x => x.TemperatureC >= request.TemperatureRangeMin.Value);
-        }
-
-        if (request is not null && request.TemperatureRangeMax.HasValue)
-        {
-            query = query.Where(x => x.TemperatureC <= request.TemperatureRangeMax.Value);
-        }
-
-        var forecasts = await query
-            .ToListAsync();
+        var forecasts = await weatherForecastRepository
+            .GetWeatherForecasts(request?.TemperatureRangeMin, request?.TemperatureRangeMax);
 
         var response = GetWeatherForecastResponse.Create(forecasts);
 

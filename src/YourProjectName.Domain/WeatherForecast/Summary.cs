@@ -2,7 +2,7 @@
 using YourProjectName.Domain.Commons;
 
 namespace YourProjectName.Domain.WeatherForecast;
-public class Summary : ValueObject
+public record Summary
 {
     public string Value { get; private set; }
 
@@ -24,10 +24,5 @@ public class Summary : ValueObject
         }
 
         return Result.Ok(new Summary(value));
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
     }
 }

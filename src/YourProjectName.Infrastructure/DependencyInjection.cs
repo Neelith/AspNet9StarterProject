@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using YourProjectName.Application.Infrastructure.Persistance;
+using YourProjectName.Domain.WeatherForecast;
 using YourProjectName.Infrastructure.Persistence;
+using YourProjectName.Infrastructure.Persistence.Repository;
 
 namespace YourProjectName.Infrastructure;
 
@@ -10,18 +12,22 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string? dbConnectionString)
     {
         //Register infrastructure services here
+        ArgumentNullException.ThrowIfNull(dbConnectionString, nameof(dbConnectionString));
 
-        if (!string.IsNullOrEmpty(dbConnectionString))
-        {
-            //log warning if the connection string is empty
-            services.AddDbContext(dbConnectionString);
-        }
-
+        services.AddDbContext(dbConnectionString)
+                .AddRepositories();
 
         return services;
     }
 
-    private static void AddDbContext(this IServiceCollection services, string? connectionString)
+    private static IServiceCollection AddRepositories(this IServiceCollection services) 
+    {
+        services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDbContext(this IServiceCollection services, string? connectionString)
     {
         if (string.IsNullOrEmpty(connectionString))
         {
@@ -31,5 +37,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>((options) => options.UseNpgsql(connectionString));
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        return services;
     }
 }

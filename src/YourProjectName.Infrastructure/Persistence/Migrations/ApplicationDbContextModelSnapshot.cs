@@ -56,7 +56,7 @@ namespace YourProjectName.Infrastructure.Persistence.Migrations
 
                             b1.HasKey("WeatherForecastAggregateId");
 
-                            b1.ToTable("Forecasts");
+                            b1.ToTable("Forecasts", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("WeatherForecastAggregateId");

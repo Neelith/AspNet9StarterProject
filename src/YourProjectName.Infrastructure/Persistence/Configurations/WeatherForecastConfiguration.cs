@@ -14,9 +14,9 @@ namespace YourProjectName.Infrastructure.Persistence.Configurations
                 .ValueGeneratedOnAdd()
                 .IsRequired();
 
-            builder.OwnsOne(c => c.Summary, (config) => 
+            builder.OwnsOne(c => c.Summary, (summaryBuilder) => 
             {
-                config.Property(c => c.Value)
+                summaryBuilder.Property(c => c.Value)
                     .HasColumnName("Summary")
                     .HasMaxLength(256);
             });
