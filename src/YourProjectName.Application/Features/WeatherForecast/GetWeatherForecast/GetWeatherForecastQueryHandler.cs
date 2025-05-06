@@ -1,8 +1,6 @@
 ﻿using FluentResults;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using YourProjectName.Application.Commons.Handlers;
-using YourProjectName.Application.Infrastructure.Persistance;
 using YourProjectName.Domain.Commons;
 using YourProjectName.Domain.WeatherForecast;
 
@@ -26,7 +24,7 @@ public sealed class GetWeatherForecastQueryHandler(
         }
 
 
-        string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
+        //string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
         var forecasts = await weatherForecastRepository
             .GetWeatherForecasts(request?.TemperatureRangeMin, request?.TemperatureRangeMax);
