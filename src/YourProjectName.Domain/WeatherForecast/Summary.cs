@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using System.Text.Json.Serialization;
+using FluentResults;
 using YourProjectName.Domain.Commons;
 
 namespace YourProjectName.Domain.WeatherForecast;
@@ -6,6 +7,7 @@ public record Summary
 {
     public string Value { get; private set; }
 
+    [JsonConstructor]
     private Summary(string value)
     {
         Value = value;

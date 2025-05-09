@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using System.Text.Json.Serialization;
+using FluentResults;
 using YourProjectName.Domain.Commons;
 
 namespace YourProjectName.Domain.WeatherForecast;
@@ -10,7 +11,13 @@ public class WeatherForecastAggregate : AggregateRoot<int>
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     public Summary? Summary { get; private set; }
 
-    private WeatherForecastAggregate() { }
+    [JsonConstructor]
+    private WeatherForecastAggregate(DateOnly date, int temperatureC, Summary? summary)
+    {
+        Date = date;
+        TemperatureC = temperatureC;
+        Summary = summary;
+    }
 
     public static Result<WeatherForecastAggregate> Create(DateOnly date, int temperatureC, string? summaryValue)
     {
@@ -21,12 +28,7 @@ public class WeatherForecastAggregate : AggregateRoot<int>
             return Result.Fail(summaryCreationResult.Errors);
         }
 
-        return new WeatherForecastAggregate
-        {
-            Date = date,
-            TemperatureC = temperatureC,
-            Summary = summaryCreationResult.Value
-        };
+        return new WeatherForecastAggregate(date, temperatureC, summaryCreationResult.Value);
     }
 
     private static Result<Summary?> CreateSummary(string? summaryValue)

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using YourProjectName.Application.Infrastructure.Caching;
 using YourProjectName.Application.Infrastructure.Persistance;
 using YourProjectName.Domain.WeatherForecast;
+using YourProjectName.Infrastructure.Caching;
 using YourProjectName.Infrastructure.Persistence;
 using YourProjectName.Infrastructure.Persistence.Repository;
 
@@ -9,13 +11,14 @@ namespace YourProjectName.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string? dbConnectionString)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string? dbConnectionString, RedisSettings? redisSettings = default)
     {
         //Register infrastructure services here
         ArgumentNullException.ThrowIfNull(dbConnectionString, nameof(dbConnectionString));
 
         services.AddDbContext(dbConnectionString)
-                .AddRepositories();
+                .AddRepositories()
+                .AddRedis(redisSettings);
 
         return services;
     }
@@ -37,6 +40,25 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>((options) => options.UseNpgsql(connectionString));
 
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        return services;
+    }
+
+    private static IServiceCollection AddRedis(this IServiceCollection services, RedisSettings? redisSettings)
+    {
+        //Add redis only if we have a proper connection string configured
+        if (redisSettings is null || string.IsNullOrEmpty(redisSettings.ConnectionString))
+        {
+            return services;
+        }
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisSettings.ConnectionString;
+            options.InstanceName = redisSettings.KeyPrefix;
+        });
+
+        services.AddSingleton<IRedisCache, RedisCache>();
 
         return services;
     }

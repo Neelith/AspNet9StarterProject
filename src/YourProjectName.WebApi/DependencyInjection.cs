@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Scalar.AspNetCore;
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
+using YourProjectName.Infrastructure.Caching;
 using YourProjectName.WebApi.Commons;
 
 namespace YourProjectName.WebApi;
@@ -16,13 +17,33 @@ public static class DependencyInjection
         //Get the database connection string
         string? dbConnectionString = configuration.GetConnectionString("YourProjectNameDb");
 
+        //Get the redis settings
+        RedisSettings? redisSettings = AddRedisSettings(services, configuration);
+
         //Register Web API services here
         services.AddApplicationServices()
-                .AddInfrastructureServices(dbConnectionString)
+                .AddInfrastructureServices(dbConnectionString, redisSettings)
                 .AddEndpoints(Assembly.GetExecutingAssembly())
                 .AddOpenApiServices();
 
         return services;
+    }
+
+    private static RedisSettings? AddRedisSettings(IServiceCollection services, IConfiguration configuration)
+    {
+        //Get the redis settings from the configuration
+        var redisSettingsSection = configuration.GetSection(nameof(RedisSettings));
+
+        if (redisSettingsSection is null)
+        {
+            return null;
+        }
+
+        //Add the redis settings to the DI container
+        services.Configure<RedisSettings>(redisSettingsSection);
+
+        //Return the redis settings
+        return redisSettingsSection.Get<RedisSettings>(); ;
     }
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
