@@ -3,7 +3,7 @@ using FluentValidation;
 using YourProjectName.Application.Commons.Handlers;
 using YourProjectName.Application.Infrastructure.Caching;
 using YourProjectName.Domain.Commons;
-using YourProjectName.Domain.WeatherForecast;
+using YourProjectName.Domain.WeatherForecasts;
 
 namespace YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
 
@@ -27,7 +27,7 @@ public sealed class GetWeatherForecastQueryHandler(
 
         const string cacheKey = "weatherforecasts";
 
-        var cachedForecasts = await redisCache.GetAsync<List<WeatherForecastAggregate>>(cacheKey);
+        var cachedForecasts = await redisCache.GetAsync<List<Domain.WeatherForecasts.WeatherForecast>>(cacheKey);
 
         if (cachedForecasts is not null)
         {

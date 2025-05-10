@@ -43,7 +43,7 @@ public static class DependencyInjection
         services.Configure<RedisSettings>(redisSettingsSection);
 
         //Return the redis settings
-        return redisSettingsSection.Get<RedisSettings>(); ;
+        return redisSettingsSection.Get<RedisSettings>();
     }
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

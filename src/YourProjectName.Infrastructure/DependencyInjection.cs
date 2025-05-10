@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using YourProjectName.Application.Infrastructure.Caching;
 using YourProjectName.Application.Infrastructure.Persistance;
-using YourProjectName.Domain.WeatherForecast;
+using YourProjectName.Domain.WeatherForecasts;
 using YourProjectName.Infrastructure.Caching;
 using YourProjectName.Infrastructure.Persistence;
 using YourProjectName.Infrastructure.Persistence.Repository;

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using YourProjectName.Application.Infrastructure.Persistance;
-using YourProjectName.Domain.WeatherForecast;
+using YourProjectName.Domain.WeatherForecasts;
 
 namespace YourProjectName.Infrastructure.Persistence
 {
@@ -16,6 +16,6 @@ namespace YourProjectName.Infrastructure.Persistence
         }
 
         //Set your DB sets here, put them in the IApplicationDbContext interface first
-        public DbSet<WeatherForecastAggregate> Forecasts { get; set; }
+        public DbSet<WeatherForecast> Forecasts { get; set; }
     }
 }

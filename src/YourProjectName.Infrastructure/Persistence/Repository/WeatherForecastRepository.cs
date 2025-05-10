@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using YourProjectName.Domain.WeatherForecast;
+using YourProjectName.Domain.WeatherForecasts;
 
 namespace YourProjectName.Infrastructure.Persistence.Repository;
 internal class WeatherForecastRepository(ApplicationDbContext applicationDbContext) : IWeatherForecastRepository
 {
-    public async Task<List<WeatherForecastAggregate>> GetWeatherForecasts(int? temperatureRangeMin, int? temperatureRangeMax)
+    public async Task<List<WeatherForecast>> GetWeatherForecasts(int? temperatureRangeMin, int? temperatureRangeMax)
     {
         var query = applicationDbContext.Forecasts.AsNoTracking();
 

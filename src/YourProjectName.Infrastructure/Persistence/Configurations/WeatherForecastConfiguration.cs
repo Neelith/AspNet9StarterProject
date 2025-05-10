@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using YourProjectName.Domain.WeatherForecast;
+using YourProjectName.Domain.WeatherForecasts;
 
 namespace YourProjectName.Infrastructure.Persistence.Configurations
 {
-    public class WeatherForecastConfiguration : IEntityTypeConfiguration<WeatherForecastAggregate>
+    public class WeatherForecastConfiguration : IEntityTypeConfiguration<WeatherForecast>
     {
-        public void Configure(EntityTypeBuilder<WeatherForecastAggregate> builder)
+        public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
             builder.ToTable("Forecasts").HasKey(c => c.Id);
 

@@ -1,8 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using FluentResults;
-using YourProjectName.Domain.Commons;
+using YourProjectName.Shared.Results;
 
-namespace YourProjectName.Domain.WeatherForecast;
+namespace YourProjectName.Domain.WeatherForecasts;
 public record Summary
 {
     public string Value { get; private set; }
@@ -17,12 +16,12 @@ public record Summary
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return Result.Fail(Errors.ValidationError("Summary cannot be empty"));
+            return Result.Fail<Summary>(SummaryErrors.NullOrEmpty);
         }
 
         if (value.Length > 256)
         {
-            return Result.Fail(Errors.ValidationError("Summary cannot exceed 256 characters"));
+            return Result.Fail<Summary>(SummaryErrors.SummaryTooLong);
         }
 
         return Result.Ok(new Summary(value));
