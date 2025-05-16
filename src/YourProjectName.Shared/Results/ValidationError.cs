@@ -6,7 +6,7 @@ public sealed record ValidationError : Error
 {
     public ValidationError(IEnumerable<Error> errors)
         : base(
-            ValidationErrorCode,
+            "Validation",
             "One or more validation errors occurred",
             ErrorType.Validation)
     {
@@ -15,7 +15,7 @@ public sealed record ValidationError : Error
 
     public ValidationError(IEnumerable<ValidationFailure> errors)
         : base(
-            ValidationErrorCode,
+            "Validation",
             "One or more validation errors occurred",
             ErrorType.Validation)
     {

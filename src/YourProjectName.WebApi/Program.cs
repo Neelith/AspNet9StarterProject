@@ -1,4 +1,4 @@
-using YourProjectName.WebApi;
+using YourProjectName.WebApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
