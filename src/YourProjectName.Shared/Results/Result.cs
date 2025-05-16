@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation.Results;
 
 namespace YourProjectName.Shared.Results;
 
@@ -31,6 +32,8 @@ public class Result
 
     public static Result<TValue> Fail<TValue>(Error error) =>
         new(default, false, error);
+    public static Result<TValue> Fail<TValue>(IEnumerable<ValidationFailure> errors) =>
+        new(default, false, new ValidationError(errors));
 }
 
 public class Result<TValue> : Result

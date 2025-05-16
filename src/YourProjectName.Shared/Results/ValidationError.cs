@@ -1,14 +1,25 @@
-﻿namespace YourProjectName.Shared.Results;
+﻿using FluentValidation.Results;
+
+namespace YourProjectName.Shared.Results;
 
 public sealed record ValidationError : Error
 {
-    public ValidationError(Error[] errors)
+    public ValidationError(IEnumerable<Error> errors)
         : base(
-            "Validation",
+            ValidationErrorCode,
             "One or more validation errors occurred",
             ErrorType.Validation)
     {
-        Errors = errors;
+        Errors = [.. errors];
+    }
+
+    public ValidationError(IEnumerable<ValidationFailure> errors)
+        : base(
+            ValidationErrorCode,
+            "One or more validation errors occurred",
+            ErrorType.Validation)
+    {
+        Errors = [.. errors.Select(failure => new Error(failure.ErrorCode, failure.ErrorMessage, ErrorType.Validation))];
     }
 
     public Error[] Errors { get; }

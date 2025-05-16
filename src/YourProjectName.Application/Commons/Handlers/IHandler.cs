@@ -3,7 +3,7 @@ using YourProjectName.Application.Commons.Responses;
 
 namespace YourProjectName.Application.Commons.Handlers;
 
-public interface IHandler<TRequest, TResponse>
+public interface IHandler<in TRequest, TResponse>
     where TRequest : IRequest
 {
     Task<TResponse> HandleAsync(TRequest request);

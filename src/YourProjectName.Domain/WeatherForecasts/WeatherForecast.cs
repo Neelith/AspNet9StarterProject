@@ -12,12 +12,17 @@ public class WeatherForecast : Entity
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     public Summary? Summary { get; private set; }
 
-    [JsonConstructor]
     private WeatherForecast(DateOnly date, int temperatureC, Summary? summary)
     {
         Date = date;
         TemperatureC = temperatureC;
         Summary = summary;
+    }
+
+    //EF constructor
+    private WeatherForecast(int id, DateOnly date, int temperatureC) : this(date, temperatureC, null)
+    {
+        Id = id;
     }
 
     [JsonConstructor]

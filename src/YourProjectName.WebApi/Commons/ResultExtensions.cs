@@ -1,7 +1,6 @@
-﻿using FluentResults;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using YourProjectName.Domain.Commons;
+using YourProjectName.Shared.Results;
 
 namespace YourProjectName.WebApi.Commons;
 
@@ -12,7 +11,7 @@ public static class ResultExtensions
         Func<Result<T>, IResult> onSuccess,
         Func<Result<T>, IResult> onFailure)
     {
-        if (result.IsFailed)
+        if (result.IsFailure)
         {
             return onFailure(result);
         }
@@ -29,28 +28,24 @@ public static class ResultExtensions
             throw new ArgumentException("Expected 'failed' result, but 'success' result was found instead");
         }
 
-        var errorCode = result.Errors.GetResultErrorCode();
-
-        return errorCode switch
+        return result.Error.Code switch
         {
-            Errors.ValidationErrorCode => result.ToBadRequest(instance),
-            Errors.NotFoundErrorCode => result.ToNotFound(instance),
-            Errors.InternalErrorCode => result.ToInternalServerError(instance),
+            Error.ValidationErrorCode => result.ToBadRequest(instance),
+            Error.NotFoundErrorCode => result.ToNotFound(instance),
+            Error.InternalErrorCode => result.ToInternalServerError(instance),
             _ => throw new ArgumentException("Unhandled result error code"),
         };
     }
 
     public static BadRequest<ProblemDetails> ToBadRequest<T>(this Result<T> result, string? instance)
     {
-        ThrowIfErrorResultIsNotValid(result.ToResult(), Errors.ValidationErrorCode);
-
-        string[] errors = result.Errors.GetArrayOfErrorMessages();
+        ThrowIfErrorResultIsNotValid(result, Error.ValidationErrorCode);
 
         var problem = new ProblemDetails
         {
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
             Title = "One or more validation errors found",
-            Detail = errors is not null && errors.Length != 0 ? string.Join($"{Environment.NewLine}- ", errors) : null,
+            Detail = !string.IsNullOrEmpty(result.Error.Description) ? result.Error.Description : null,
             Instance = instance
         };
 
@@ -59,15 +54,13 @@ public static class ResultExtensions
 
     public static NotFound<ProblemDetails> ToNotFound<T>(this Result<T> result, string? instance)
     {
-        ThrowIfErrorResultIsNotValid(result.ToResult(), Errors.NotFoundErrorCode);
-
-        string[] errors = result.Errors.GetArrayOfErrorMessages();
+        ThrowIfErrorResultIsNotValid(result, Error.NotFoundErrorCode);
 
         var problem = new ProblemDetails
         {
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.5",
             Title = "The resource was not found",
-            Detail = errors is not null && errors.Length != 0 ? string.Join($"{Environment.NewLine}- ", errors) : null,
+            Detail = !string.IsNullOrEmpty(result.Error.Description) ? result.Error.Description : null,
             Instance = instance
         };
 
@@ -76,37 +69,20 @@ public static class ResultExtensions
 
     public static InternalServerError<ProblemDetails> ToInternalServerError<T>(this Result<T> result, string? instance)
     {
-        ThrowIfErrorResultIsNotValid(result.ToResult(), Errors.InternalErrorCode);
-
-        string[] errors = result.Errors.GetArrayOfErrorMessages();
+        ThrowIfErrorResultIsNotValid(result, Error.InternalErrorCode);
 
         var problem = new ProblemDetails
         {
             Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1",
             Title = "Internal server error",
-            Detail = errors is not null && errors.Length != 0 ? string.Join($"{Environment.NewLine}- ", errors) : null,
+            Detail = !string.IsNullOrEmpty(result.Error.Description) ? result.Error.Description : null,
             Instance = instance
         };
 
         return TypedResults.InternalServerError(problem);
     }
 
-    public static int? GetResultErrorCode(this IEnumerable<IError> errors)
-    {
-        if (errors is null || !errors.Any())
-        {
-            return null;
-        }
-
-        return (int?)errors?.FirstOrDefault()?.Metadata.FirstOrDefault(m => m.Key == Errors.ErrorCode).Value;
-    }
-
-    private static string[] GetArrayOfErrorMessages(this IEnumerable<IError> errors)
-    {
-        return [.. errors.Select(e => e.Message)];
-    }
-
-    private static void ThrowIfErrorResultIsNotValid(Result result, int errorCode)
+    private static void ThrowIfErrorResultIsNotValid(Result result, string errorCode)
     {
         ArgumentNullException.ThrowIfNull(result);
 
@@ -115,11 +91,11 @@ public static class ResultExtensions
             throw new ArgumentException("Expected 'failed' result, but 'success' result was found instead");
         }
 
-        var code = result.Errors.GetResultErrorCode();
+        var code = result.Error.Code;
 
-        if (!code.HasValue || code != errorCode)
+        if (string.IsNullOrEmpty(code) || code != errorCode)
         {
-            throw new ArgumentException($"Expected '{Errors.ErrorCode}' to be '{errorCode}' but '{code} was found instead'");
+            throw new ArgumentException($"Expected '{errorCode}' but '{code} was found instead'");
         }
     }
 }

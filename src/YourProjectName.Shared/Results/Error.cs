@@ -2,6 +2,11 @@
 
 public record Error
 {
+    public const string NullErrorCode = "Null";
+    public const string ValidationErrorCode = "Validation";
+    public const string NotFoundErrorCode = "NotFound";
+    public const string InternalErrorCode = "InternalError";
+
     public string Code { get; }
 
     public string Description { get; }
@@ -18,7 +23,7 @@ public record Error
     public static readonly Error None = new(string.Empty, string.Empty, ErrorType.Failure);
 
     public static readonly Error NullValue = new(
-        "Null",
+        NullErrorCode,
         "Null value was provided",
         ErrorType.Failure);
 

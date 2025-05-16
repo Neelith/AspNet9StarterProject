@@ -47,16 +47,19 @@ public static class DependencyInjection
     private static IServiceCollection AddRedis(this IServiceCollection services, RedisSettings? redisSettings)
     {
         //Add redis only if we have a proper connection string configured
+        //Otherwise, use the in-memory cache
         if (redisSettings is null || string.IsNullOrEmpty(redisSettings.ConnectionString))
         {
-            return services;
+            services.AddDistributedMemoryCache();
         }
-
-        services.AddStackExchangeRedisCache(options =>
+        else
         {
-            options.Configuration = redisSettings.ConnectionString;
-            options.InstanceName = redisSettings.KeyPrefix;
-        });
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisSettings.ConnectionString;
+                options.InstanceName = redisSettings.KeyPrefix;
+            });
+        }
 
         services.AddSingleton<IRedisCache, RedisCache>();
 
