@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
 using YourProjectName.Shared.Results;
 using YourProjectName.WebApi.Commons;
@@ -15,8 +14,7 @@ public class WeatherForecastEndpoints : IEndpoints
             .WithTags(Tags.WeatherForecast)
             .WithDescription("Weather forecast endpoints");
 
-        group.MapGet("/",
-            async Task<IResult>
+        group.MapGet("/", async
             ([AsParameters] GetWeatherForecastQuery query,
             [FromServices] IGetWeatherForecastHandler handler) =>
             {

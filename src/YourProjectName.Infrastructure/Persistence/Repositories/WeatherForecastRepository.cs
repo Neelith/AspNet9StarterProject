@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using YourProjectName.Domain.WeatherForecasts;
 
-namespace YourProjectName.Infrastructure.Persistence.Repository;
+namespace YourProjectName.Infrastructure.Persistence.Repositories;
 internal class WeatherForecastRepository(ApplicationDbContext applicationDbContext) : IWeatherForecastRepository
 {
     public async Task<List<WeatherForecast>> GetWeatherForecasts(int? temperatureRangeMin, int? temperatureRangeMax)

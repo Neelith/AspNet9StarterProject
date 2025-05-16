@@ -20,7 +20,7 @@ internal static class ResultExtensions
         return onSuccess(result);
     }
 
-    public static IResult ToErrorResponse<T>(this Result<T> result)
+    public static ProblemHttpResult ToErrorResponse<T>(this Result<T> result)
     {
         if (result is null || result.IsSuccess)
         {
