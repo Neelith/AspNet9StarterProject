@@ -12,11 +12,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["YourProjectName.WebApi/YourProjectName.WebApi.csproj", "YourProjectName.WebApi/"]
-COPY ["YourProjectName.Application/YourProjectName.Application.csproj", "YourProjectName.Application/"]
-COPY ["YourProjectName.Domain/YourProjectName.Domain.csproj", "YourProjectName.Domain/"]
-COPY ["YourProjectName.Shared/YourProjectName.Shared.csproj", "YourProjectName.Shared/"]
-COPY ["YourProjectName.Infrastructure/YourProjectName.Infrastructure.csproj", "YourProjectName.Infrastructure/"]
+COPY . .
 RUN dotnet restore "./YourProjectName.WebApi/YourProjectName.WebApi.csproj"
 COPY . .
 WORKDIR "/src/YourProjectName.WebApi"
