@@ -5,7 +5,7 @@ using YourProjectName.Domain.WeatherForecasts;
 
 namespace YourProjectName.Infrastructure.Persistence
 {
-    internal class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IUnitOfWork
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IUnitOfWork
     {
         protected override void OnModelCreating(ModelBuilder builder)
         {

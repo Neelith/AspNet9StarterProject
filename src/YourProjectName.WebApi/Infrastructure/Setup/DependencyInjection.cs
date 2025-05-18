@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
 using YourProjectName.Infrastructure.Caching;
@@ -53,5 +54,8 @@ internal static class DependencyInjection
         app.UseOpenApi();
 
         app.UseHttpsRedirection();
+
+        //Apply database migrations
+        app.ApplyDatabaseMigrations();
     }
 }
