@@ -9,9 +9,9 @@ public class TraceLoggerMiddleware(RequestDelegate next)
 {
     public Task InvokeAsync(HttpContext context)
     {
-        bool isTraceHeaderPresent = context.Request.Headers.TryGetValue(Headers.Trace, out StringValues strings);
+        bool isTraceHeaderPresent = context.Request.Headers.TryGetValue(Headers.Trace, out StringValues traceHeaderValue);
 
-        string traceId = isTraceHeaderPresent ? strings.ToString() : context.TraceIdentifier;
+        string traceId = isTraceHeaderPresent && !StringValues.IsNullOrEmpty(traceHeaderValue) ? traceHeaderValue.ToString() : context.TraceIdentifier;
 
         using (LogContext.PushProperty("TraceId", traceId))
         {

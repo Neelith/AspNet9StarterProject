@@ -15,9 +15,9 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
     {
         logger.LogError(exception, "Unhandled exception occurred");
 
-        bool isTraceHeaderPresent = httpContext.Request.Headers.TryGetValue(Headers.Trace, out StringValues strings);
+        bool isTraceHeaderPresent = httpContext.Request.Headers.TryGetValue(Headers.Trace, out StringValues traceHeaderValue);
 
-        string traceId = isTraceHeaderPresent ? strings.ToString() : httpContext.TraceIdentifier;
+        string traceId = isTraceHeaderPresent && !StringValues.IsNullOrEmpty(traceHeaderValue) ? traceHeaderValue.ToString() : httpContext.TraceIdentifier;
 
         var problemDetails = new ProblemDetails
         {
