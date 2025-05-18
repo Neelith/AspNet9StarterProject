@@ -2,6 +2,7 @@
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
 using YourProjectName.Infrastructure.Caching;
+using YourProjectName.WebApi.Infrastructure.Middlewares;
 
 namespace YourProjectName.WebApi.Infrastructure.Setup;
 
@@ -14,6 +15,9 @@ internal static class DependencyInjection
 
         //Get the services collection
         IServiceCollection services = webApplicationBuilder.Services;
+
+        //Add global exception handling
+        services.AddExceptionHandler<GlobalExceptionHandler>();
 
         //Add problem details
         services.ConfigureProblemDetails();
@@ -41,6 +45,9 @@ internal static class DependencyInjection
     {
         //Enable logging
         app.UseLogging();
+
+        //Enable global exception handling
+        app.UseExceptionHandler();
 
         //Register all the endpoints that implement the IEndpoints interface
         app.MapEndpoints();
