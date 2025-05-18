@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
+using YourProjectName.Application.Features.WeatherForecasts.GetWeatherForecasts;
 using YourProjectName.Shared.Results;
 using YourProjectName.WebApi.Constants;
 using YourProjectName.WebApi.Infrastructure.Extensions;
@@ -15,7 +15,7 @@ public class WeatherForecastsEndpoints : IEndpoints
             .WithDescription("Weather forecast endpoints");
 
         group.MapGet("/", async
-            ([AsParameters] GetWeatherForecastQuery query,
+            ([AsParameters] GetWeatherForecastsQuery query,
             [FromServices] IGetWeatherForecastHandler handler) =>
             {
                 var result = await handler.HandleAsync(query);
@@ -25,7 +25,7 @@ public class WeatherForecastsEndpoints : IEndpoints
                     result => result.ToErrorResponse()
                 );
             })
-            .Produces<GetWeatherForecastResponse>(StatusCodes.Status200OK)
+            .Produces<GetWeatherForecastsResponse>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 

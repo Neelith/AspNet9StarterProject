@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
+using YourProjectName.Application.Features.WeatherForecasts.GetWeatherForecasts;
 
 namespace YourProjectName.Application;
 
@@ -20,7 +20,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddHandlers(this IServiceCollection services)
     {
-        services.AddScoped<IGetWeatherForecastHandler, GetWeatherForecastQueryHandler>();
+        services.AddScoped<IGetWeatherForecastHandler, GetWeatherForecastsQueryHandler>();
 
         return services;
     }

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
+namespace YourProjectName.Application.Features.WeatherForecasts.GetWeatherForecasts;
 
-public sealed class GetWeatherForecastQueryValidator : AbstractValidator<GetWeatherForecastQuery>
+public sealed class GetWeatherForecastsQueryValidator : AbstractValidator<GetWeatherForecastsQuery>
 {
-    public GetWeatherForecastQueryValidator()
+    public GetWeatherForecastsQueryValidator()
     {
         RuleFor(x => x.TemperatureRangeMin)
             .GreaterThanOrEqualTo(-20)

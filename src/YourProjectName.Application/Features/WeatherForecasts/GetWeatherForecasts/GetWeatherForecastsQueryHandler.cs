@@ -5,18 +5,18 @@ using YourProjectName.Application.Infrastructure.Caching;
 using YourProjectName.Domain.WeatherForecasts;
 using YourProjectName.Shared.Results;
 
-namespace YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
+namespace YourProjectName.Application.Features.WeatherForecasts.GetWeatherForecasts;
 
-public interface IGetWeatherForecastHandler : IHandler<GetWeatherForecastQuery, Result<GetWeatherForecastResponse>> { }
+public interface IGetWeatherForecastHandler : IHandler<GetWeatherForecastsQuery, Result<GetWeatherForecastsResponse>> { }
 
-public sealed class GetWeatherForecastQueryHandler(
-    ILogger<GetWeatherForecastQueryHandler> logger,
-    IValidator<GetWeatherForecastQuery> validator,
+public sealed class GetWeatherForecastsQueryHandler(
+    ILogger<GetWeatherForecastsQueryHandler> logger,
+    IValidator<GetWeatherForecastsQuery> validator,
     IWeatherForecastRepository weatherForecastRepository,
     IRedisCache redisCache)
     : IGetWeatherForecastHandler
 {
-    public async Task<Result<GetWeatherForecastResponse>> HandleAsync(GetWeatherForecastQuery request)
+    public async Task<Result<GetWeatherForecastsResponse>> HandleAsync(GetWeatherForecastsQuery request)
     {
         logger.LogInformation("Handling GetWeatherForecastQuery with request: {Request}", request);
 
@@ -24,16 +24,16 @@ public sealed class GetWeatherForecastQueryHandler(
 
         if (!validationResult.IsValid)
         {
-            return Result.Fail<GetWeatherForecastResponse>(validationResult.Errors);
+            return Result.Fail<GetWeatherForecastsResponse>(validationResult.Errors);
         }
 
         const string cacheKey = "weatherforecasts";
 
-        var cachedForecasts = await redisCache.GetAsync<List<Domain.WeatherForecasts.WeatherForecast>>(cacheKey);
+        var cachedForecasts = await redisCache.GetAsync<List<WeatherForecast>>(cacheKey);
 
         if (cachedForecasts is not null)
         {
-            return GetWeatherForecastResponse.Create(cachedForecasts);
+            return GetWeatherForecastsResponse.Create(cachedForecasts);
         }
 
         //string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
@@ -41,7 +41,7 @@ public sealed class GetWeatherForecastQueryHandler(
         var forecasts = await weatherForecastRepository
             .GetWeatherForecasts(request?.TemperatureRangeMin, request?.TemperatureRangeMax);
 
-        var response = GetWeatherForecastResponse.Create(forecasts);
+        var response = GetWeatherForecastsResponse.Create(forecasts);
 
         await redisCache.SetAsync(cacheKey, forecasts, TimeSpan.FromMinutes(2));
 
