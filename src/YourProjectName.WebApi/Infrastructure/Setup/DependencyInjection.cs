@@ -1,16 +1,28 @@
 ﻿using System.Reflection;
+using Serilog;
+using Serilog.Core;
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
 using YourProjectName.Infrastructure.Caching;
+using YourProjectName.WebApi.Infrastructure.Middlewares;
 
-namespace YourProjectName.WebApi.Infrastructure;
+namespace YourProjectName.WebApi.Infrastructure.Setup;
 
 internal static class DependencyInjection
 {
-    public static IServiceCollection AddWebApiServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddWebApiServices(this WebApplicationBuilder webApplicationBuilder)
     {
+        //Add logging
+        webApplicationBuilder.AddLogging();
+
+        //Get the services collection
+        IServiceCollection services = webApplicationBuilder.Services;
+
         //Add problem details
         services.ConfigureProblemDetails();
+
+        //Get configuration
+        IConfiguration configuration = webApplicationBuilder.Configuration;
 
         //Get the database connection string
         string? dbConnectionString = configuration.GetConnectionString("YourProjectNameDb");
@@ -30,6 +42,9 @@ internal static class DependencyInjection
     // Configure the HTTP request pipeline.
     public static void UseAppServices(this WebApplication app)
     {
+        //Enable logging
+        app.UseLogging();
+
         //Register all the endpoints that implement the IEndpoints interface
         app.MapEndpoints();
 

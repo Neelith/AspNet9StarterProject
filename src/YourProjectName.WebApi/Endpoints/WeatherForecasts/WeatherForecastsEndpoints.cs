@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourProjectName.Application.Features.WeatherForecast.GetWeatherForecast;
 using YourProjectName.Shared.Results;
-using YourProjectName.WebApi.Commons;
 using YourProjectName.WebApi.Constants;
+using YourProjectName.WebApi.Infrastructure.Extensions;
 
 namespace YourProjectName.WebApi.Endpoints.WeatherForecast;
 
-public class WeatherForecastEndpoints : IEndpoints
+public class WeatherForecastsEndpoints : IEndpoints
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("weatherforecast")
+        var group = app.MapGroup("weatherforecasts")
             .WithTags(Tags.WeatherForecast)
             .WithDescription("Weather forecast endpoints");
 
@@ -29,28 +29,22 @@ public class WeatherForecastEndpoints : IEndpoints
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
+        group.MapGet("/exception",
+            async Task<IResult>
+            () =>
+            {
+                throw new Exception("Test exception");
+            })
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
         group.MapGet("/bad",
             async Task<IResult>
             () =>
             {
-                throw new Exception("ciaooo");
-            })
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
-
-        group.MapPost("/bad",
-            async Task<IResult>
-            (CreateWeatherForecastCommand payload) =>
-            {
-                var result = Result.Fail<CreateWeatherForecastCommand>(new Error("Test.Error", "A very bad request", ErrorType.Validation));
+                var result = Result.Fail(new Error("Test.Error", "A very bad request", ErrorType.Validation));
                 return result.ToErrorResponse();
             })
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
     }
-}
-
-public class CreateWeatherForecastCommand
-{
-    public int? TemperatureRangeMin { get; set; }
-    public int? TemperatureRangeMax { get; set; }
 }

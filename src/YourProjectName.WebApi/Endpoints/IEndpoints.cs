@@ -1,4 +1,4 @@
-﻿namespace YourProjectName.WebApi.Commons;
+﻿namespace YourProjectName.WebApi.Endpoints;
 
 public interface IEndpoints
 {

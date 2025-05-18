@@ -1,6 +1,6 @@
 ﻿using YourProjectName.Infrastructure.Caching;
 
-namespace YourProjectName.WebApi.Infrastructure;
+namespace YourProjectName.WebApi.Infrastructure.Setup;
 
 internal static class AddRedisSettingsExtension
 {

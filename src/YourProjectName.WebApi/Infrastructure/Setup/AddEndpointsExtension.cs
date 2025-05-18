@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
-using YourProjectName.WebApi.Commons;
+using YourProjectName.WebApi.Endpoints;
 
-namespace YourProjectName.WebApi.Infrastructure;
+namespace YourProjectName.WebApi.Infrastructure.Setup;
 
 internal static class AddEndpointsExtension
 {

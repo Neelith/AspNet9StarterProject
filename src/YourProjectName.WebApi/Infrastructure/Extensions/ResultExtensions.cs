@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using YourProjectName.Shared.Results;
 
-namespace YourProjectName.WebApi.Commons;
+namespace YourProjectName.WebApi.Infrastructure.Extensions;
 
 internal static class ResultExtensions
 {
@@ -22,6 +22,11 @@ internal static class ResultExtensions
 
     public static ProblemHttpResult ToErrorResponse<T>(this Result<T> result)
     {
+        return ToErrorResponse(result as Result);
+    }
+
+    public static ProblemHttpResult ToErrorResponse(this Result result)
+    {
         if (result is null || result.IsSuccess)
         {
             throw new ArgumentException("Expected 'failed' result, but 'success' result was found instead");
@@ -36,7 +41,7 @@ internal static class ResultExtensions
         };
     }
 
-    private static ProblemHttpResult ToProblem<T>(this Result<T> result, ErrorType errorType, HttpStatusCode statusCode)
+    private static ProblemHttpResult ToProblem(this Result result, ErrorType errorType, HttpStatusCode statusCode)
     {
 
         if (result.Error.Type != errorType)

@@ -1,4 +1,4 @@
-﻿namespace YourProjectName.WebApi.Infrastructure;
+﻿namespace YourProjectName.WebApi.Infrastructure.Setup;
 
 internal static class AddProblemDetailsExtension
 {
@@ -12,11 +12,16 @@ internal static class AddProblemDetailsExtension
                         var instance = httpContext.Request.Path;
                         context.ProblemDetails.Instance = instance;
 
-                        var method = httpContext.Request.Method;
-                        context.ProblemDetails.Extensions.TryAdd("method", method);
+                        if (context.Exception is null)
+                        {
+                            
+                            var method = httpContext.Request.Method;
+                            context.ProblemDetails.Extensions.TryAdd("method", method);
 
-                        var requestHeaders = httpContext.Request.Headers;
-                        context.ProblemDetails.Extensions.TryAdd("requestHeaders", requestHeaders);
+                            context.ProblemDetails.Extensions.TryAdd("endpoint", $"{method} {instance}");
+
+                        }
+
                     });
     }
 }

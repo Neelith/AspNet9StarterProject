@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Logging;
 using YourProjectName.Application.Commons.Handlers;
 using YourProjectName.Application.Infrastructure.Caching;
 using YourProjectName.Domain.WeatherForecasts;
@@ -9,6 +10,7 @@ namespace YourProjectName.Application.Features.WeatherForecast.GetWeatherForecas
 public interface IGetWeatherForecastHandler : IHandler<GetWeatherForecastQuery, Result<GetWeatherForecastResponse>> { }
 
 public sealed class GetWeatherForecastQueryHandler(
+    ILogger<GetWeatherForecastQueryHandler> logger,
     IValidator<GetWeatherForecastQuery> validator, 
     IWeatherForecastRepository weatherForecastRepository,
     IRedisCache redisCache) 
@@ -16,6 +18,8 @@ public sealed class GetWeatherForecastQueryHandler(
 {
     public async Task<Result<GetWeatherForecastResponse>> HandleAsync(GetWeatherForecastQuery request)
     {
+        logger.LogInformation("Handling GetWeatherForecastQuery with request: {Request}", request);
+
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)

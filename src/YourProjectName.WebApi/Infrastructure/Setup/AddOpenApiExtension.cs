@@ -1,6 +1,6 @@
 ﻿using Scalar.AspNetCore;
 
-namespace YourProjectName.WebApi.Infrastructure;
+namespace YourProjectName.WebApi.Infrastructure.Setup;
 
 internal static class AddOpenApiExtension
 {
