@@ -11,7 +11,7 @@ public static class AddLoggingExtension
         webApplicationBuilder.Logging.ClearProviders();
 
         //configure serilog for logging
-        webApplicationBuilder.Host.UseSerilog((context, loggerConfig) => 
+        webApplicationBuilder.Host.UseSerilog((context, loggerConfig) =>
             loggerConfig.ReadFrom.Configuration(context.Configuration));
     }
 

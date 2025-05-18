@@ -1,4 +1,4 @@
-﻿namespace YourProjectName.Application.Commons.Responses;
+﻿namespace YourProjectName.Application.Infrastructure.Handlers;
 
 public abstract record DataResponse<TData>() : IResponse where TData : notnull
 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourProjectName.Application.Features.WeatherForecasts.GetWeatherForecasts;
+using YourProjectName.Application.Infrastructure.Handlers;
 using YourProjectName.Shared.Results;
 using YourProjectName.WebApi.Constants;
 using YourProjectName.WebApi.Infrastructure.Extensions;
@@ -16,9 +17,9 @@ public class WeatherForecastsEndpoints : IEndpoints
 
         group.MapGet("/", async
             ([AsParameters] GetWeatherForecastsQuery query,
-            [FromServices] IGetWeatherForecastHandler handler) =>
+            [FromServices] IQueryHandler<GetWeatherForecastsQuery, GetWeatherForecastsResponse> handler) =>
             {
-                var result = await handler.HandleAsync(query);
+                var result = await handler.Handle(query);
 
                 return result.Match(
                     result => TypedResults.Ok(result.Value),

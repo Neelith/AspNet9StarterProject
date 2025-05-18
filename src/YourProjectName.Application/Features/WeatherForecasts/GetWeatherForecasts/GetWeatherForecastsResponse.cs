@@ -1,4 +1,4 @@
-﻿using YourProjectName.Application.Commons.Responses;
+﻿using YourProjectName.Application.Infrastructure.Handlers;
 using YourProjectName.Domain.WeatherForecasts;
 
 namespace YourProjectName.Application.Features.WeatherForecasts.GetWeatherForecasts;
