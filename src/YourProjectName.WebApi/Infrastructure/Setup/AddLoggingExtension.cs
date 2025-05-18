@@ -9,7 +9,7 @@ public static class AddLoggingExtension
     {
         //clear the registered logging providers
         webApplicationBuilder.Logging.ClearProviders();
-        
+
         //configure serilog for logging
         webApplicationBuilder.Host.UseSerilog((context, services, configuration) =>
             configuration.ReadFrom.Configuration(context.Configuration));

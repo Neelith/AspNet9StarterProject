@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Reflection;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using YourProjectName.WebApi.Endpoints;
 
 namespace YourProjectName.WebApi.Infrastructure.Setup;

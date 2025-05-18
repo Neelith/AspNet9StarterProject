@@ -1,10 +1,7 @@
 ﻿using System.Reflection;
-using Serilog;
-using Serilog.Core;
 using YourProjectName.Application;
 using YourProjectName.Infrastructure;
 using YourProjectName.Infrastructure.Caching;
-using YourProjectName.WebApi.Infrastructure.Middlewares;
 
 namespace YourProjectName.WebApi.Infrastructure.Setup;
 

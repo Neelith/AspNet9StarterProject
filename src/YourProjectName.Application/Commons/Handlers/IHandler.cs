@@ -1,5 +1,4 @@
 ﻿using YourProjectName.Application.Commons.Requests;
-using YourProjectName.Application.Commons.Responses;
 
 namespace YourProjectName.Application.Commons.Handlers;
 

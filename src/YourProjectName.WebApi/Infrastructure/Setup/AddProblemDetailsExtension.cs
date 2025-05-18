@@ -14,7 +14,7 @@ internal static class AddProblemDetailsExtension
 
                         if (context.Exception is null)
                         {
-                            
+
                             var method = httpContext.Request.Method;
                             context.ProblemDetails.Extensions.TryAdd("method", method);
 

@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using YourProjectName.WebApi.Infrastructure.Middlewares;
 using YourProjectName.WebApi.Infrastructure.Setup;
 
 // Create the web application builder

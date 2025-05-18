@@ -14,7 +14,7 @@ namespace YourProjectName.Infrastructure.Persistence.Configurations
                 .ValueGeneratedOnAdd()
                 .IsRequired();
 
-            builder.OwnsOne(c => c.Summary, (summaryBuilder) => 
+            builder.OwnsOne(c => c.Summary, (summaryBuilder) =>
             {
                 summaryBuilder.Property(c => c.Value)
                     .HasColumnName("Summary")

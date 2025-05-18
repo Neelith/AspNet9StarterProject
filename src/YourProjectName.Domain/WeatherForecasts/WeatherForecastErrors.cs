@@ -3,7 +3,7 @@
 namespace YourProjectName.Domain.WeatherForecasts;
 public static class WeatherForecastErrors
 {
-    
+
 }
 public static class SummaryErrors
 {

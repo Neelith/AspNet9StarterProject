@@ -11,9 +11,9 @@ public interface IGetWeatherForecastHandler : IHandler<GetWeatherForecastQuery, 
 
 public sealed class GetWeatherForecastQueryHandler(
     ILogger<GetWeatherForecastQueryHandler> logger,
-    IValidator<GetWeatherForecastQuery> validator, 
+    IValidator<GetWeatherForecastQuery> validator,
     IWeatherForecastRepository weatherForecastRepository,
-    IRedisCache redisCache) 
+    IRedisCache redisCache)
     : IGetWeatherForecastHandler
 {
     public async Task<Result<GetWeatherForecastResponse>> HandleAsync(GetWeatherForecastQuery request)
