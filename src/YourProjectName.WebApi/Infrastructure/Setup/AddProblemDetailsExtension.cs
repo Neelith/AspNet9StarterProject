@@ -2,7 +2,7 @@
 
 internal static class AddProblemDetailsExtension
 {
-    public static void ConfigureProblemDetails(this IServiceCollection services)
+    public static IServiceCollection ConfigureProblemDetails(this IServiceCollection services)
     {
         services.AddProblemDetails(options =>
                     options.CustomizeProblemDetails = context =>
@@ -23,5 +23,7 @@ internal static class AddProblemDetailsExtension
                         }
 
                     });
+
+        return services;
     }
 }

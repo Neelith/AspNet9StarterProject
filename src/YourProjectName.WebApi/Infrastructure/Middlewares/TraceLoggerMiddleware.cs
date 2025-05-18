@@ -5,7 +5,7 @@ using YourProjectName.WebApi.Constants;
 
 namespace YourProjectName.WebApi.Infrastructure.Middlewares;
 
-public class RequestLoggerMiddleware(RequestDelegate next)
+public class TraceLoggerMiddleware(RequestDelegate next)
 {
     public Task InvokeAsync(HttpContext context)
     {

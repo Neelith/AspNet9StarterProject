@@ -17,7 +17,7 @@ public static class AddLoggingExtension
 
     public static void UseLogging(this WebApplication app)
     {
-        app.UseMiddleware<RequestLoggerMiddleware>();
+        app.UseMiddleware<TraceLoggerMiddleware>();
 
         app.UseSerilogRequestLogging();
     }

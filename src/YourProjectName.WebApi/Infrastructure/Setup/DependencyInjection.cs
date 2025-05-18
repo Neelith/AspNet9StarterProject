@@ -16,12 +16,6 @@ internal static class DependencyInjection
         //Get the services collection
         IServiceCollection services = webApplicationBuilder.Services;
 
-        //Add global exception handling
-        services.AddExceptionHandler<GlobalExceptionHandler>();
-
-        //Add problem details
-        services.ConfigureProblemDetails();
-
         //Get configuration
         IConfiguration configuration = webApplicationBuilder.Configuration;
 
@@ -31,11 +25,14 @@ internal static class DependencyInjection
         //Get the redis settings
         RedisSettings? redisSettings = services.AddRedisSettings(configuration);
 
-        //Register Web API services here
-        services.AddApplicationServices()
-                .AddInfrastructureServices(dbConnectionString, redisSettings)
-                .AddEndpoints(Assembly.GetExecutingAssembly())
-                .AddOpenApiServices();
+        //Register services here
+        services
+            .AddExceptionHandler<GlobalExceptionHandler>()
+            .ConfigureProblemDetails()
+            .AddApplicationServices()
+            .AddInfrastructureServices(dbConnectionString, redisSettings)
+            .AddEndpoints(Assembly.GetExecutingAssembly())
+            .AddOpenApiServices();
 
         return services;
     }
