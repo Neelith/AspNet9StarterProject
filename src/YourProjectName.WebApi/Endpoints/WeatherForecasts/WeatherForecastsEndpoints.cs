@@ -4,7 +4,7 @@ using YourProjectName.Shared.Results;
 using YourProjectName.WebApi.Constants;
 using YourProjectName.WebApi.Infrastructure.Extensions;
 
-namespace YourProjectName.WebApi.Endpoints.WeatherForecast;
+namespace YourProjectName.WebApi.Endpoints.WeatherForecasts;
 
 public class WeatherForecastsEndpoints : IEndpoints
 {
