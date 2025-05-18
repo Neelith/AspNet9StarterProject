@@ -8,7 +8,7 @@ namespace YourProjectName.WebApi.Infrastructure.Setup;
 
 internal static class DependencyInjection
 {
-    public static IServiceCollection AddWebApiServices(this WebApplicationBuilder webApplicationBuilder)
+    public static IServiceCollection AddAppServices(this WebApplicationBuilder webApplicationBuilder)
     {
         //Add logging
         webApplicationBuilder.AddLogging();

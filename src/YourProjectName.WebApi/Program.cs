@@ -4,7 +4,7 @@ using YourProjectName.WebApi.Infrastructure.Setup;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.AddWebApiServices();
+builder.AddAppServices();
 
 var app = builder.Build();
 
