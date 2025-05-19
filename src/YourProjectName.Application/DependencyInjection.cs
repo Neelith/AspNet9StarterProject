@@ -16,7 +16,8 @@ public static class DependencyInjection
         //Register handlers and validators
         services
             .AddHandlers()
-            .AddValidatorsFromAssembly(assembly);
+            .AddValidatorsFromAssembly(assembly)
+            .AddDecorators();
 
         return services;
     }
@@ -40,6 +41,18 @@ public static class DependencyInjection
                 .AsImplementedInterfaces()
             .WithScopedLifetime());
 
+        //Register the domain event handlers
+        services.Scan(scan => scan
+            .FromAssembliesOf(typeof(DependencyInjection))
+            .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+        return services;
+    }
+
+    private static IServiceCollection AddDecorators(this IServiceCollection services)
+    {
         //Here we decorate the command handlers with the validation decorator
         //This decorator will validate the command before executing it
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(ValidationDecorator.CommandHandler<,>));
@@ -51,13 +64,6 @@ public static class DependencyInjection
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(LoggingDecorator.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingDecorator.CommandBaseHandler<>));
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(LoggingDecorator.QueryHandler<,>));
-
-        //Register the domain event handlers
-        services.Scan(scan => scan
-            .FromAssembliesOf(typeof(DependencyInjection))
-            .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
 
         return services;
     }
