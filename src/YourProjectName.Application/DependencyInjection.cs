@@ -40,17 +40,17 @@ public static class DependencyInjection
                 .AsImplementedInterfaces()
             .WithScopedLifetime());
 
-        //TODO: sistemare i decoratori
         //Here we decorate the command handlers with the validation decorator
         //This decorator will validate the command before executing it
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(ValidationDecorator.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(ValidationDecorator.CommandBaseHandler<>));
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(ValidationDecorator.QueryHandler<,>));
 
         //Here we decorate the handlers with the logging decorator
         //This decorator will log the handler before and after executing it
-        services.TryDecorate(typeof(IQueryHandler<,>), typeof(LoggingDecorator.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(LoggingDecorator.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingDecorator.CommandBaseHandler<>));
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(LoggingDecorator.QueryHandler<,>));
 
         //Register the domain event handlers
         services.Scan(scan => scan

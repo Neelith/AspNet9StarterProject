@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using YourProjectName.Application.Infrastructure.Handlers;
 using YourProjectName.Shared.Results;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace YourProjectName.Application.Infrastructure.Decorators;
 internal static class LoggingDecorator
@@ -22,7 +23,15 @@ internal static class LoggingDecorator
             }
             else
             {
-                logger.LogError("Completed command {CommandName} with error", typeof(TCommand).Name);
+                var errors = result.Error is ValidationError validationError
+                  ? string.Join(", ", validationError.Errors.Select(e => e.Description))
+                  : result.Error.Description;
+
+                logger.LogError("Completed command {CommandName} with one or more errors. Error code: {ErrorCode}. Error type: {ErrorType}. Errors: {Errors}",
+                    typeof(TCommand).Name,
+                    result.Error.Code,
+                    result.Error.Type,
+                    errors);
             }
 
             return result;
@@ -46,7 +55,15 @@ internal static class LoggingDecorator
             }
             else
             {
-                logger.LogError("Completed command {CommandName} with error", typeof(TCommand).Name);
+                var errors = result.Error is ValidationError validationError
+                   ? string.Join(", ", validationError.Errors.Select(e => e.Description))
+                   : result.Error.Description;
+
+                logger.LogError("Completed command {CommandName} with one or more errors. Error code: {ErrorCode}. Error type: {ErrorType}. Errors: {Errors}",
+                    typeof(TCommand).Name,
+                    result.Error.Code,
+                    result.Error.Type,
+                    errors);
             }
 
             return result;
@@ -60,7 +77,7 @@ internal static class LoggingDecorator
     {
         public async Task<Result<TResponse>> Handle(TQuery query, CancellationToken? cancellationToken = default)
         {
-            logger.LogInformation("Processing query {QueryName}", typeof(TQuery).Name);
+            logger.LogInformation("Processing query {Query}", query);
 
             Result<TResponse> result = await inner.Handle(query, cancellationToken);
 
@@ -70,7 +87,15 @@ internal static class LoggingDecorator
             }
             else
             {
-                logger.LogError("Completed query {QueryName} with error", typeof(TQuery).Name);
+                var errors = result.Error is ValidationError validationError 
+                    ? string.Join(", ", validationError.Errors.Select(e => e.Description))
+                    : result.Error.Description;
+
+                logger.LogError("Completed query {QueryName} with one or more errors. Error code: {ErrorCode}. Error type: {ErrorType}. Errors: {Errors}", 
+                    typeof(TQuery).Name, 
+                    result.Error.Code, 
+                    result.Error.Type,
+                    errors);
             }
 
             return result;
